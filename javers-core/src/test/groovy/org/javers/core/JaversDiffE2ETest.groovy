@@ -19,6 +19,7 @@ import org.javers.core.model.ShallowPhone
 import org.javers.core.model.PrimitiveEntity
 import org.javers.core.model.SnapshotEntity
 import spock.lang.Specification
+import spock.lang.Ignore
 
 import static org.javers.core.JaversBuilder.javers
 import static org.javers.core.model.DummyUser.Sex.FEMALE
@@ -228,7 +229,7 @@ class JaversDiffE2ETest extends Specification {
         changes.count{ it.propertyName == "stringSet" } // == 1
     }
 
-    def "should compare ShallowReferences using regular ReferenceChange"() {
+    def "should compare ShallowReferences using regular ReferenceChange using class annotation"() {
         given:
         def javers = javers().build()
         def left =  new SnapshotEntity(id:1, shallowPhone: new ShallowPhone(1))
@@ -242,7 +243,7 @@ class JaversDiffE2ETest extends Specification {
         change.right.value() == ShallowPhone.name+"/2"
     }
 
-    def "should not compare properties when class is mapped as ShallowReference"() {
+    def "should not compare properties when class is mapped as ShallowReference using class annotation"() {
         given:
         def javers = javers().build()
         def left =  new SnapshotEntity(id:1, shallowPhone: new ShallowPhone(1, "123", new Category(1)))
@@ -250,5 +251,27 @@ class JaversDiffE2ETest extends Specification {
 
         expect:
         javers.compare(left, right).hasChanges() == false
+    }
+
+    def "should not compare properties when class is mapped as ShallowReference using type annotation"() {
+        given:
+        def javers = javers().withMappingStyle(MappingStyle.FIELD).build()
+        def left =  new SnapshotEntity(id:1, shallowFieldAddress: new Person("Me","Smith"))
+        def right = new SnapshotEntity(id:1, shallowFieldAddress: new Person("Me","Bond"))
+
+        expect:
+        javers.compare(left, right).hasChanges() == false
+    }
+
+    @Ignore
+    def "should not compare properties when class is mapped as ShallowReference using getter annotation"() {
+        given:
+        def javers = javers().withMappingStyle(MappingStyle.BEAN).build()
+        def left =  new SnapshotEntity(id:1, shallowGetterAddress: new Person("Me","Smith"))
+        def right = new SnapshotEntity(id:1, shallowGetterAddress: new Person("Me","Bond"))
+
+        expect:
+        javers.compare(left, right).hasChanges() == false
+        // it won't because managedType is not entity
     }
 }

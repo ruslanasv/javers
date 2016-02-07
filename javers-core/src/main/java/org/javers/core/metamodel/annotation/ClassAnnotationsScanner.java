@@ -3,10 +3,6 @@ package org.javers.core.metamodel.annotation;
 import org.javers.common.collections.Optional;
 import org.javers.common.reflection.ReflectionUtil;
 import org.javers.common.validation.Validate;
-import org.javers.core.metamodel.clazz.ClientsClassDefinition;
-import org.javers.core.metamodel.clazz.EntityDefinition;
-import org.javers.core.metamodel.clazz.ValueDefinition;
-import org.javers.core.metamodel.clazz.ValueObjectDefinition;
 
 import java.lang.annotation.Annotation;
 

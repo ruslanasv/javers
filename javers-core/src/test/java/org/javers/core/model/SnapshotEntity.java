@@ -1,12 +1,16 @@
 package org.javers.core.model;
 
-import java.util.Optional;
+
+import org.javers.core.examples.model.Person;
+import org.javers.core.metamodel.annotation.ShallowReference;
 import org.joda.time.LocalDate;
+
 import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -57,6 +61,11 @@ public class SnapshotEntity {
     private Map<String,EnumSet<DummyEnum>> mapOfGenericValues;
 
     private ShallowPhone shallowPhone;
+
+    @ShallowReference
+    private Person shallowFieldAddress;
+
+    private Person shallowGetterAddress;
 
     @Id
     public int getId() {
@@ -303,4 +312,21 @@ public class SnapshotEntity {
         this.optionalInteger = optionalInteger;
     }
 
+
+    public Person getShallowFieldAddress() {
+        return shallowFieldAddress;
+    }
+
+    public void setShallowFieldAddress(Person shallowFieldAddress) {
+        this.shallowFieldAddress = shallowFieldAddress;
+    }
+
+    @ShallowReference
+    public Person getShallowGetterAddress() {
+        return shallowGetterAddress;
+    }
+
+    public void setShallowGetterAddress(Person shallowGetterAddress) {
+        this.shallowGetterAddress = shallowGetterAddress;
+    }
 }
