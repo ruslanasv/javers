@@ -1,5 +1,6 @@
 package org.javers.core
 
+import org.javers.common.collections.Optional
 import org.javers.common.date.FakeDateProvider
 import org.javers.common.reflection.ConcreteWithActualType
 import org.javers.core.diff.changetype.ValueChange
@@ -8,6 +9,8 @@ import org.javers.core.model.*
 import org.javers.core.model.SnapshotEntity.DummyEnum
 import org.javers.core.snapshot.SnapshotsAssert
 import org.javers.repository.api.JaversRepository
+import org.javers.repository.api.QueryParams
+import org.javers.repository.api.QueryParamsBuilder
 import org.javers.repository.api.SnapshotIdentifier
 import org.javers.repository.inmemory.InMemoryRepository
 import org.javers.repository.jql.QueryBuilder
@@ -733,6 +736,36 @@ class JaversRepositoryE2ETest extends Specification {
 
         then:
         assert snapshots.size() == snapshotIdentifiers.size()
+    }
+
+    def "should treat refactored VOs as different versions of the same clients domain object"(){
+        given:
+        javers.commit('author', new EntityWithRefactoredValueObject(id:1, value: new OldValueObject(5, 5)))
+        javers.commit('author', new EntityWithRefactoredValueObject(id:1, value: new NewValueObject(5, 10)))
+
+        when:
+        def snapshots = javers.findSnapshots(QueryBuilder.byValueObject(EntityWithRefactoredValueObject,'value').build())
+
+        then:
+        snapshots.version == [2, 1]
+    }
+
+    def "should fetch VO embedded in another VO"() {
+        given:
+        javers.commit('author', new DummyUserDetails(
+            id: 1,
+            dummyAddress: new DummyAddress(
+                networkAddress: new DummyNetworkAddress(
+                    addres: '1.1.1.1'
+                )
+            )
+        ))
+
+        when:
+        def snapshot = javers.findSnapshots(byClass(DummyNetworkAddress).build()).first()
+
+        then:
+        snapshot.globalId.value() == 'org.javers.core.model.DummyUserDetails/1#dummyAddress#networkAddress'
     }
 
 }
