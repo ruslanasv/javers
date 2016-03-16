@@ -17,6 +17,7 @@ public class CommitFactoryModule extends InstantiatingModule {
     @Override
     protected Collection<Class> getImplementations() {
         return (Collection)Lists.asList(
+                //TODO Romas - replace by JsonCommitFactory
                 CommitFactory.class,
                 CommitSeqGenerator.class
         );

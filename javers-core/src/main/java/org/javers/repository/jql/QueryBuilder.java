@@ -6,6 +6,7 @@ import org.javers.common.validation.Validate;
 import org.javers.core.Javers;
 import org.javers.core.commit.CommitId;
 import org.javers.core.metamodel.object.CdoSnapshot;
+import org.javers.json.JsonInstanceIdDTO;
 import org.javers.repository.api.QueryParams;
 import org.javers.repository.api.QueryParamsBuilder;
 import org.joda.time.LocalDate;
@@ -70,6 +71,11 @@ public class QueryBuilder {
     public static QueryBuilder byInstanceId(Object localId, Class entityClass){
         Validate.argumentsAreNotNull(localId, entityClass);
         return new QueryBuilder(new IdFilter(instanceId(localId, entityClass)));
+    }
+
+    public static QueryBuilder byJsonInstanceId(Object localId, String entityClassType){
+        Validate.argumentsAreNotNull(localId, entityClassType);
+        return new QueryBuilder(new IdFilter(JsonInstanceIdDTO.instanceId(localId, entityClassType)));
     }
 
     /**

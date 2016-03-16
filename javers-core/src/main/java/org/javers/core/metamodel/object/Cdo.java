@@ -10,6 +10,7 @@ import org.javers.core.metamodel.property.Property;
  *
  * @author bartosz walacik
  */
+//TODO Romas - create JsonCdo by extending Cdo
 public abstract class Cdo {
     private final GlobalId globalId;
     private final ManagedType managedType;

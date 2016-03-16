@@ -12,6 +12,7 @@ import java.util.Set;
 /**
  * @author bartosz walacik
  */
+//TODO Romas - create JsonLiveGraphFactory class by extending LiveGraphFactory in order to inject JsonLiveCdoFactory
 public class LiveGraphFactory {
     private final TypeMapper typeMapper;
     private final LiveCdoFactory liveCdoFactory;

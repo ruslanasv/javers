@@ -6,6 +6,7 @@ import org.javers.core.metamodel.type.TypeMapper;
 /**
  * @author bartosz walacik
  */
+//TODO Romas - create class JsonLiveCdoFactory by extending LiveCdoFactory in order to overide create method returning JsonCdo
 public class LiveCdoFactory implements CdoFactory {
 
     private final GlobalIdFactory globalIdFactory;

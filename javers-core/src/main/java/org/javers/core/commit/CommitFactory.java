@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * @author bartosz walacik
  */
+//TODO Romas - Create JsonCommitFactory class by extending CommitFactory in order to inject JsonLiveGraphFactory
 public class CommitFactory {
     private final DiffFactory diffFactory;
     private final JaversExtendedRepository javersRepository;

@@ -5,6 +5,7 @@ import org.javers.common.exception.JaversExceptionCode;
 import org.javers.common.validation.Validate;
 import org.javers.core.graph.ObjectAccessHook;
 import org.javers.core.metamodel.type.*;
+import org.javers.json.JsonInstanceIdDTO;
 import org.javers.repository.jql.GlobalIdDTO;
 import org.javers.repository.jql.InstanceIdDTO;
 import org.javers.repository.jql.UnboundedValueObjectIdDTO;
@@ -38,6 +39,8 @@ public class GlobalIdFactory {
         targetCdo = objectAccessHook.access(targetCdo);
         ManagedType targetManagedType = typeMapper.getJaversManagedType(targetCdo.getClass());
 
+        //TODO Romas - add if for json object returning InstanceId with id from map
+
         if (targetManagedType instanceof EntityType) {
             return InstanceId.createFromInstance(targetCdo, (EntityType) targetManagedType);
         }
@@ -60,6 +63,10 @@ public class GlobalIdFactory {
 
     public InstanceId createInstanceId(Object localId, EntityType entity){
         return new InstanceId(entity.getName(), localId);
+    }
+
+    public InstanceId createInstanceId(Object localId, String entityType){
+        return new InstanceId(entityType, localId);
     }
 
     @Deprecated
@@ -97,6 +104,10 @@ public class GlobalIdFactory {
             ValueObjectIdDTO idDTO = (ValueObjectIdDTO) globalIdDTO;
             GlobalId ownerId = createFromDto(idDTO.getOwnerIdDTO());
             return createValueObjectIdFromPath(ownerId, idDTO.getPath());
+        }
+        if (globalIdDTO instanceof JsonInstanceIdDTO){
+            JsonInstanceIdDTO jsonIdDTO = (JsonInstanceIdDTO) globalIdDTO;
+            return createInstanceId(jsonIdDTO.getCdoId(), jsonIdDTO.getEntityType());
         }
         throw new RuntimeException("type " + globalIdDTO.getClass() + " is not implemented");
     }
